@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { describeArtifact } from '@/ai/flows/artifact-description';
 import { augmentMonasteryInformation } from '@/ai/flows/augment-monastery-information';
+import { textToSpeech } from '@/ai/flows/text-to-speech';
 
 const artifactSchema = z.object({
   documentText: z.string().min(10, { message: 'Document text must be at least 10 characters.' }),
@@ -81,5 +82,40 @@ export async function augmentMonasteryInfoAction(
   } catch (e) {
     console.error(e);
     return { message: 'An error occurred while processing your submission.' };
+  }
+}
+
+const audioSchema = z.object({
+  text: z.string(),
+  monasteryName: z.string(),
+});
+
+type AudioState = {
+  audio?: string;
+  error?: string;
+}
+
+export async function generateAudioAction(
+  input: z.infer<typeof audioSchema>
+): Promise<AudioState> {
+  try {
+    const validatedFields = audioSchema.safeParse(input);
+
+    if (!validatedFields.success) {
+      return {
+        error: 'Invalid input.',
+      };
+    }
+
+    const result = await textToSpeech(validatedFields.data);
+
+    return {
+      audio: result.audio,
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      error: 'An unexpected error occurred while generating audio.',
+    };
   }
 }

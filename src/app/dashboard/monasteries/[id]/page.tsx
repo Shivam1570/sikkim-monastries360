@@ -2,7 +2,7 @@
 
 import { useFormState } from 'react-dom';
 import { useToast } from '@/hooks/use-toast';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { monasteries } from '@/lib/data';
 import { notFound } from 'next/navigation';
@@ -16,8 +16,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Camera, PlayCircle, Info } from 'lucide-react';
-import { augmentMonasteryInfoAction } from '@/lib/actions';
+import { Camera, PlayCircle, Info, PauseCircle, Loader2 } from 'lucide-react';
+import { augmentMonasteryInfoAction, generateAudioAction } from '@/lib/actions';
 
 function SubmitButton() {
   // We can't use useFormStatus here because it's not a descendant of <form>
@@ -28,19 +28,27 @@ function SubmitButton() {
 export default function MonasteryPage({ params }: { params: { id: string } }) {
   const monastery = monasteries.find((m) => m.id === params.id);
   const { toast } = useToast();
+  const audioRef = useRef<HTMLAudioElement>(null);
+  
+  const [audioState, setAudioState] = useState({
+    playing: false,
+    loadingTrack: null as string | null,
+    currentTrack: null as string | null,
+    audioSrc: '',
+  });
 
-  const [state, formAction] = useFormState(augmentMonasteryInfoAction, {
+  const [formState, formAction] = useFormState(augmentMonasteryInfoAction, {
     message: '',
   });
 
   useEffect(() => {
-    if (state.message) {
+    if (formState.message) {
       toast({
         title: 'Information Processed',
-        description: state.message,
+        description: formState.message,
       });
     }
-  }, [state, toast]);
+  }, [formState, toast]);
 
   if (!monastery) {
     notFound();
@@ -53,8 +61,42 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
     '4. The Story of the Founder',
   ];
 
+  const handlePlayPause = async (track: string) => {
+    if (audioState.currentTrack === track && audioState.playing) {
+      audioRef.current?.pause();
+      setAudioState(prev => ({ ...prev, playing: false }));
+    } else if (audioState.currentTrack === track && !audioState.playing) {
+      audioRef.current?.play();
+      setAudioState(prev => ({ ...prev, playing: true }));
+    } else {
+      setAudioState(prev => ({...prev, loadingTrack: track, playing: false, audioSrc: ''}));
+      const result = await generateAudioAction({ text: track, monasteryName: monastery.name });
+      if (result.audio) {
+        setAudioState({ loadingTrack: null, currentTrack: track, audioSrc: result.audio, playing: true });
+      } else {
+        toast({ title: "Error", description: result.error || "Failed to generate audio." });
+        setAudioState(prev => ({ ...prev, loadingTrack: null }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (audioState.audioSrc && audioRef.current) {
+      audioRef.current.src = audioState.audioSrc;
+      audioRef.current.play().catch(e => console.error("Audio play failed:", e));
+    }
+  }, [audioState.audioSrc]);
+  
+  useEffect(() => {
+    const audioElement = audioRef.current;
+    const handleEnded = () => setAudioState(prev => ({...prev, playing: false}));
+    audioElement?.addEventListener('ended', handleEnded);
+    return () => audioElement?.removeEventListener('ended', handleEnded);
+  }, []);
+
   return (
     <div className="space-y-8">
+      <audio ref={audioRef} />
       <div>
         <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight">{monastery.name}</h1>
         <p className="text-muted-foreground mt-2 text-lg">Established: {monastery.established} | {monastery.district}</p>
@@ -103,8 +145,8 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                 <ul className="space-y-3">
                     {audioTracks.map((track, index) => (
                         <li key={index} className="flex items-center gap-3">
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <PlayCircle className="h-5 w-5" />
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlayPause(track)} disabled={audioState.loadingTrack !== null && audioState.loadingTrack !== track}>
+                                {audioState.loadingTrack === track ? <Loader2 className="h-5 w-5 animate-spin"/> : (audioState.playing && audioState.currentTrack === track) ? <PauseCircle className="h-5 w-5" /> : <PlayCircle className="h-5 w-5" />}
                             </Button>
                             <span className="text-sm flex-1">{track}</span>
                         </li>
