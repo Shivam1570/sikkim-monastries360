@@ -16,8 +16,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Camera, PlayCircle, Info, PauseCircle, Loader2 } from 'lucide-react';
-import { augmentMonasteryInfoAction, generateAudioAction } from '@/lib/actions';
+import { Camera, PlayCircle, Info, PauseCircle, Loader2, Compass } from 'lucide-react';
+import { augmentMonasteryInfoAction, generateAudioAction, getLocalServicesAction } from '@/lib/actions';
 
 function SubmitButton() {
   // We can't use useFormStatus here because it's not a descendant of <form>
@@ -30,6 +30,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
   const { toast } = useToast();
   const audioRef = useRef<HTMLAudioElement>(null);
   
+  const [localServices, setLocalServices] = useState({ loading: false, recommendations: '' });
   const [audioState, setAudioState] = useState({
     playing: false,
     loadingTrack: null as string | null,
@@ -53,6 +54,17 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
   if (!monastery) {
     notFound();
   }
+  
+  const handleFetchLocalServices = async () => {
+    setLocalServices({ loading: true, recommendations: '' });
+    const result = await getLocalServicesAction({ monasteryId: monastery.id, monasteryName: monastery.name });
+    if (result.recommendations) {
+        setLocalServices({ loading: false, recommendations: result.recommendations });
+    } else {
+        toast({ title: "Error", description: result.error || "Failed to fetch local services." });
+        setLocalServices({ loading: false, recommendations: '' });
+    }
+  };
 
   const audioTracks = [
     '1. Introduction to the Monastery',
@@ -136,6 +148,23 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         </div>
 
         <div className="lg:col-span-1 space-y-8">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline text-2xl flex items-center gap-2"><Compass/> Plan Your Visit</CardTitle>
+                    <CardDescription>Find local transportation and guides.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {localServices.recommendations ? (
+                        <p className="text-sm text-muted-foreground">{localServices.recommendations}</p>
+                    ) : (
+                        <Button className="w-full" onClick={handleFetchLocalServices} disabled={localServices.loading}>
+                            {localServices.loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Find Local Services
+                        </Button>
+                    )}
+                </CardContent>
+            </Card>
+
           <Card>
             <CardHeader>
                 <CardTitle className="font-headline text-2xl">Smart Audio Guide</CardTitle>

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { describeArtifact } from '@/ai/flows/artifact-description';
 import { augmentMonasteryInformation } from '@/ai/flows/augment-monastery-information';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
+import { getLocalServices } from '@/ai/flows/local-services';
 
 const artifactSchema = z.object({
   documentText: z.string().min(10, { message: 'Document text must be at least 10 characters.' }),
@@ -118,4 +119,39 @@ export async function generateAudioAction(
       error: 'An unexpected error occurred while generating audio.',
     };
   }
+}
+
+const localServicesSchema = z.object({
+    monasteryId: z.string(),
+    monasteryName: z.string(),
+});
+
+type LocalServicesState = {
+    recommendations?: string;
+    error?: string;
+}
+
+export async function getLocalServicesAction(
+    input: z.infer<typeof localServicesSchema>
+): Promise<LocalServicesState> {
+    try {
+        const validatedFields = localServicesSchema.safeParse(input);
+
+        if (!validatedFields.success) {
+            return {
+                error: 'Invalid input.',
+            };
+        }
+
+        const result = await getLocalServices(validatedFields.data);
+        return {
+            recommendations: result.recommendations,
+        };
+
+    } catch (e) {
+        console.error(e);
+        return {
+            error: 'An unexpected error occurred while fetching local services.',
+        };
+    }
 }
