@@ -29,23 +29,6 @@ export type AugmentMonasteryInformationOutput = z.infer<
   typeof AugmentMonasteryInformationOutputSchema
 >;
 
-export async function augmentMonasteryInformation(
-  input: AugmentMonasteryInformationInput
-): Promise<AugmentMonasteryInformationOutput> {
-  return augmentMonasteryInformationFlow(input);
-}
-
-const augmentMonasteryInformationPrompt = ai.definePrompt({
-  name: 'augmentMonasteryInformationPrompt',
-  input: {schema: AugmentMonasteryInformationInputSchema},
-  output: {schema: AugmentMonasteryInformationOutputSchema},
-  prompt: `You are an expert in Sikkimese monasteries. You will be provided with existing information about a monastery, as well as crowd-sourced information. You will synthesize these two sources of information into a single, comprehensive description of the monastery.
-
-Monastery Name: {{{monasteryName}}}
-Existing Information: {{{existingInformation}}}
-Crowd-Sourced Information: {{{crowdSourcedInformation}}}`,
-});
-
 const augmentMonasteryInformationFlow = ai.defineFlow(
   {
     name: 'augmentMonasteryInformationFlow',
@@ -53,7 +36,24 @@ const augmentMonasteryInformationFlow = ai.defineFlow(
     outputSchema: AugmentMonasteryInformationOutputSchema,
   },
   async input => {
+    const augmentMonasteryInformationPrompt = ai.definePrompt({
+        name: 'augmentMonasteryInformationPrompt',
+        input: {schema: AugmentMonasteryInformationInputSchema},
+        output: {schema: AugmentMonasteryInformationOutputSchema},
+        prompt: `You are an expert in Sikkimese monasteries. You will be provided with existing information about a monastery, as well as crowd-sourced information. You will synthesize these two sources of information into a single, comprehensive description of the monastery.
+      
+      Monastery Name: {{{monasteryName}}}
+      Existing Information: {{{existingInformation}}}
+      Crowd-Sourced Information: {{{crowdSourcedInformation}}}`,
+      });
     const {output} = await augmentMonasteryInformationPrompt(input);
     return output!;
   }
 );
+
+
+export async function augmentMonasteryInformation(
+  input: AugmentMonasteryInformationInput
+): Promise<AugmentMonasteryInformationOutput> {
+  return augmentMonasteryInformationFlow(input);
+}

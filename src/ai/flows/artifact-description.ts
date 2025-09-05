@@ -25,22 +25,6 @@ const DescribeArtifactOutputSchema = z.object({
 });
 export type DescribeArtifactOutput = z.infer<typeof DescribeArtifactOutputSchema>;
 
-export async function describeArtifact(input: DescribeArtifactInput): Promise<DescribeArtifactOutput> {
-  return describeArtifactFlow(input);
-}
-
-const prompt = ai.definePrompt({
-  name: 'describeArtifactPrompt',
-  input: {schema: DescribeArtifactInputSchema},
-  output: {schema: DescribeArtifactOutputSchema},
-  prompt: `You are an expert in analyzing historical documents and manuscripts from Sikkimese monasteries.
-
-  Given the text content of a scanned document, provide a detailed description, categorize it into relevant categories, and create a short summary.
-
-  Text Content: {{{documentText}}}
-  `,
-});
-
 const describeArtifactFlow = ai.defineFlow(
   {
     name: 'describeArtifactFlow',
@@ -48,7 +32,23 @@ const describeArtifactFlow = ai.defineFlow(
     outputSchema: DescribeArtifactOutputSchema,
   },
   async input => {
+    const prompt = ai.definePrompt({
+      name: 'describeArtifactPrompt',
+      input: {schema: DescribeArtifactInputSchema},
+      output: {schema: DescribeArtifactOutputSchema},
+      prompt: `You are an expert in analyzing historical documents and manuscripts from Sikkimese monasteries.
+    
+      Given the text content of a scanned document, provide a detailed description, categorize it into relevant categories, and create a short summary.
+    
+      Text Content: {{{documentText}}}
+      `,
+    });
     const {output} = await prompt(input);
     return output!;
   }
 );
+
+
+export async function describeArtifact(input: DescribeArtifactInput): Promise<DescribeArtifactOutput> {
+  return describeArtifactFlow(input);
+}

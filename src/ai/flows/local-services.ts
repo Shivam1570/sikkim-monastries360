@@ -39,76 +39,73 @@ const localServicesDB = {
   },
 };
 
-const findTransportTool = ai.defineTool(
-  {
-    name: 'findTransport',
-    description: 'Finds local transport options like taxis near a specific monastery.',
-    inputSchema: z.object({
-      monasteryId: z.string().describe('The ID of the monastery.'),
-    }),
-    outputSchema: z.array(z.object({ name: z.string(), phone: z.string() })),
-  },
-  async ({ monasteryId }) => {
-    return (localServicesDB[monasteryId as keyof typeof localServicesDB] || localServicesDB.default).taxis;
-  }
-);
-
-const findTourGuidesTool = ai.defineTool(
-  {
-    name: 'findTourGuides',
-    description: 'Finds local tour guides and tourism services for a given monastery.',
-    inputSchema: z.object({
-        monasteryId: z.string().describe('The ID of the monastery.'),
-    }),
-    outputSchema: z.array(z.object({ name: z.string(), rating: z.number() })),
-  },
-  async ({ monasteryId }) => {
-    return (localServicesDB[monasteryId as keyof typeof localServicesDB] || localServicesDB.default).guides;
-  }
-);
-
-
-export const GetLocalServicesInputSchema = z.object({
+const GetLocalServicesInputSchema = z.object({
   monasteryId: z.string().describe('The unique identifier for the monastery.'),
   monasteryName: z.string().describe('The name of the monastery.'),
 });
 export type GetLocalServicesInput = z.infer<typeof GetLocalServicesInputSchema>;
 
-export const GetLocalServicesOutputSchema = z.object({
+const GetLocalServicesOutputSchema = z.object({
   recommendations: z.string().describe('A helpful, conversational summary of recommendations for the visitor.'),
 });
 export type GetLocalServicesOutput = z.infer<typeof GetLocalServicesOutputSchema>;
 
+const getLocalServicesFlow = ai.defineFlow(
+    {
+      name: 'getLocalServicesFlow',
+      inputSchema: GetLocalServicesInputSchema,
+      outputSchema: GetLocalServicesOutputSchema,
+    },
+    async (input) => {
+        const findTransportTool = ai.defineTool(
+            {
+              name: 'findTransport',
+              description: 'Finds local transport options like taxis near a specific monastery.',
+              inputSchema: z.object({
+                monasteryId: z.string().describe('The ID of the monastery.'),
+              }),
+              outputSchema: z.array(z.object({ name: z.string(), phone: z.string() })),
+            },
+            async ({ monasteryId }) => {
+              return (localServicesDB[monasteryId as keyof typeof localServicesDB] || localServicesDB.default).taxis;
+            }
+          );
+          
+          const findTourGuidesTool = ai.defineTool(
+            {
+              name: 'findTourGuides',
+              description: 'Finds local tour guides and tourism services for a given monastery.',
+              inputSchema: z.object({
+                  monasteryId: z.string().describe('The ID of the monastery.'),
+              }),
+              outputSchema: z.array(z.object({ name: z.string(), rating: z.number() })),
+            },
+            async ({ monasteryId }) => {
+              return (localServicesDB[monasteryId as keyof typeof localServicesDB] || localServicesDB.default).guides;
+            }
+          );
+
+        const getLocalServicesPrompt = ai.definePrompt({
+            name: 'getLocalServicesPrompt',
+            input: { schema: GetLocalServicesInputSchema },
+            output: { schema: GetLocalServicesOutputSchema },
+            tools: [findTransportTool, findTourGuidesTool],
+            prompt: `You are a helpful travel assistant for the Sikkim Sanctuaries app.
+        
+            A user is looking for local transport and tourism services near {{monasteryName}}.
+        
+            Use the available tools to find transport and tour guides. Then, provide a short, friendly, and helpful summary of the options. Be conversational and recommend that the user contact the services directly for the latest information.
+            
+            Do not just list the data. Present it in a natural, paragraph-based format.
+            `,
+        });
+
+      const { output } = await getLocalServicesPrompt(input);
+      return output!;
+    }
+  );
+  
 
 export async function getLocalServices(input: GetLocalServicesInput): Promise<GetLocalServicesOutput> {
   return getLocalServicesFlow(input);
 }
-
-
-const getLocalServicesPrompt = ai.definePrompt({
-    name: 'getLocalServicesPrompt',
-    input: { schema: GetLocalServicesInputSchema },
-    output: { schema: GetLocalServicesOutputSchema },
-    tools: [findTransportTool, findTourGuidesTool],
-    prompt: `You are a helpful travel assistant for the Sikkim Sanctuaries app.
-
-    A user is looking for local transport and tourism services near {{monasteryName}}.
-
-    Use the available tools to find transport and tour guides. Then, provide a short, friendly, and helpful summary of the options. Be conversational and recommend that the user contact the services directly for the latest information.
-    
-    Do not just list the data. Present it in a natural, paragraph-based format.
-    `,
-});
-
-
-const getLocalServicesFlow = ai.defineFlow(
-  {
-    name: 'getLocalServicesFlow',
-    inputSchema: GetLocalServicesInputSchema,
-    outputSchema: GetLocalServicesOutputSchema,
-  },
-  async (input) => {
-    const { output } = await getLocalServicesPrompt(input);
-    return output!;
-  }
-);
