@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
@@ -20,9 +20,11 @@ import { Camera, PlayCircle, Info, PauseCircle, Loader2, Compass } from 'lucide-
 import { augmentMonasteryInfoAction, generateAudioAction, getLocalServicesAction } from '@/lib/actions';
 
 function SubmitButton() {
-  // We can't use useFormStatus here because it's not a descendant of <form>
-  // A loading state could be managed with useState if needed.
-  return <Button type="submit">Submit Information</Button>;
+  const { pending } = useFormStatus();
+  return <Button type="submit" disabled={pending}>
+    {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+    Submit Information
+  </Button>;
 }
 
 export default function MonasteryPage({ params }: { params: { id: string } }) {
@@ -74,20 +76,26 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
   ];
 
   const handlePlayPause = async (track: string) => {
-    if (audioState.currentTrack === track && audioState.playing) {
+    const isPlaying = audioState.playing;
+    const currentTrack = audioState.currentTrack;
+
+    if (currentTrack === track && isPlaying) {
       audioRef.current?.pause();
       setAudioState(prev => ({ ...prev, playing: false }));
-    } else if (audioState.currentTrack === track && !audioState.playing) {
+    } else if (currentTrack === track && !isPlaying) {
       audioRef.current?.play();
       setAudioState(prev => ({ ...prev, playing: true }));
     } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
       setAudioState(prev => ({...prev, loadingTrack: track, playing: false, audioSrc: ''}));
       const result = await generateAudioAction({ text: track, monasteryName: monastery.name });
       if (result.audio) {
         setAudioState({ loadingTrack: null, currentTrack: track, audioSrc: result.audio, playing: true });
       } else {
         toast({ title: "Error", description: result.error || "Failed to generate audio." });
-        setAudioState(prev => ({ ...prev, loadingTrack: null }));
+        setAudioState(prev => ({ ...prev, loadingTrack: null, playing: false }));
       }
     }
   };
@@ -118,7 +126,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-2 space-y-8">
           <Card>
             <CardHeader>
-                <CardTitle className="font-headline text-2xl flex items-center gap-2"><Camera/> Virtual Tour</CardTitle>
+                <CardTitle><div className="flex items-center gap-2"><Camera/> Virtual Tour</div></CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="relative aspect-video w-full">
@@ -138,7 +146,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           
           <Card>
             <CardHeader>
-                <CardTitle className="font-headline text-2xl flex items-center gap-2"><Info/> About the Monastery</CardTitle>
+                <CardTitle><div className="flex items-center gap-2"><Info/> About the Monastery</div></CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-base">
                 <p>{monastery.description}</p>
@@ -150,7 +158,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-1 space-y-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline text-2xl flex items-center gap-2"><Compass/> Plan Your Visit</CardTitle>
+                    <CardTitle><div className="flex items-center gap-2"><Compass/> Plan Your Visit</div></CardTitle>
                     <CardDescription>Find local transportation and guides.</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -167,7 +175,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
 
           <Card>
             <CardHeader>
-                <CardTitle className="font-headline text-2xl">Smart Audio Guide</CardTitle>
+                <CardTitle>Smart Audio Guide</CardTitle>
                 <CardDescription>Listen to narrated walkthroughs.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -187,7 +195,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           
           <Card>
             <CardHeader>
-                <CardTitle className="font-headline text-2xl">Contribute Information</CardTitle>
+                <CardTitle>Contribute Information</CardTitle>
                 <CardDescription>Share your knowledge to enrich our records.</CardDescription>
             </CardHeader>
             <CardContent>
