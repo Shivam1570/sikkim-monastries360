@@ -35,6 +35,7 @@ export default function Home() {
             fill
             className="object-cover"
             priority
+            unoptimized
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
           <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-foreground p-4">

@@ -1,6 +1,5 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
@@ -17,15 +16,6 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Camera, PlayCircle, Info, PauseCircle, Loader2, Compass } from 'lucide-react';
-import { augmentMonasteryInfoAction, generateAudioAction, getLocalServicesAction } from '@/lib/actions';
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return <Button type="submit" disabled={pending}>
-    {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-    Submit Information
-  </Button>;
-}
 
 export default function MonasteryPage({ params }: { params: { id: string } }) {
   const monastery = monasteries.find((m) => m.id === params.id);
@@ -40,18 +30,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
     audioSrc: '',
   });
 
-  const [formState, formAction] = useFormState(augmentMonasteryInfoAction, {
-    message: '',
-  });
-
-  useEffect(() => {
-    if (formState.message) {
-      toast({
-        title: 'Information Processed',
-        description: formState.message,
-      });
-    }
-  }, [formState, toast]);
+  const [formPending, setFormPending] = useState(false);
 
   if (!monastery) {
     notFound();
@@ -59,14 +38,62 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
   
   const handleFetchLocalServices = async () => {
     setLocalServices({ loading: true, recommendations: '' });
-    const result = await getLocalServicesAction({ monasteryId: monastery.id, monasteryName: monastery.name });
-    if (result.recommendations) {
-        setLocalServices({ loading: false, recommendations: result.recommendations });
-    } else {
+    try {
+      const response = await fetch('/api/services/local', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ monasteryId: monastery.id, monasteryName: monastery.name })
+      });
+      const result = await response.json();
+      if (!response.ok) {
         toast({ title: "Error", description: result.error || "Failed to fetch local services." });
+        setLocalServices({ loading: false, recommendations: '' });
+      } else {
+        setLocalServices({ loading: false, recommendations: result.recommendations });
+      }
+    } catch (error) {
+        console.error(error);
+        toast({ title: "Error", description: "Failed to connect to the server." });
         setLocalServices({ loading: false, recommendations: '' });
     }
   };
+
+  const handleAugmentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFormPending(true);
+    const formData = new FormData(event.currentTarget);
+    
+    const data = {
+        monasteryName: formData.get('monasteryName'),
+        existingInformation: formData.get('existingInformation'),
+        crowdSourcedInformation: formData.get('crowdSourcedInformation'),
+    };
+
+    try {
+        const response = await fetch('/api/monasteries/augment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        const result = await response.json();
+        toast({
+            title: 'Information Processed',
+            description: result.message,
+        });
+        if(response.ok) {
+            (event.target as HTMLFormElement).reset();
+        }
+    } catch (error) {
+        console.error(error);
+        toast({
+            title: 'Error',
+            description: 'Failed to submit information.',
+        });
+    } finally {
+        setFormPending(false);
+    }
+  };
+
 
   const audioTracks = [
     '1. Introduction to the Monastery',
@@ -90,12 +117,23 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         audioRef.current.pause();
       }
       setAudioState(prev => ({...prev, loadingTrack: track, playing: false, audioSrc: ''}));
-      const result = await generateAudioAction({ text: track, monasteryName: monastery.name });
-      if (result.audio) {
-        setAudioState({ loadingTrack: null, currentTrack: track, audioSrc: result.audio, playing: true });
-      } else {
-        toast({ title: "Error", description: result.error || "Failed to generate audio." });
-        setAudioState(prev => ({ ...prev, loadingTrack: null, playing: false }));
+      try {
+        const response = await fetch('/api/audio/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: track, monasteryName: monastery.name })
+        });
+        const result = await response.json();
+        if (!response.ok) {
+            toast({ title: "Error", description: result.error || "Failed to generate audio." });
+            setAudioState(prev => ({ ...prev, loadingTrack: null, playing: false }));
+        } else {
+            setAudioState({ loadingTrack: null, currentTrack: track, audioSrc: result.audio, playing: true });
+        }
+      } catch (error) {
+          console.error(error);
+          toast({ title: "Error", description: "Failed to connect to the server." });
+          setAudioState(prev => ({ ...prev, loadingTrack: null, playing: false }));
       }
     }
   };
@@ -109,7 +147,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
   
   useEffect(() => {
     const audioElement = audioRef.current;
-    const handleEnded = () => setAudioState(prev => ({...prev, playing: false}));
+    const handleEnded = () => setAudioState(prev => ({...prev, playing: false, currentTrack: null}));
     audioElement?.addEventListener('ended', handleEnded);
     return () => audioElement?.removeEventListener('ended', handleEnded);
   }, []);
@@ -199,14 +237,17 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                 <CardDescription>Share your knowledge to enrich our records.</CardDescription>
             </CardHeader>
             <CardContent>
-              <form action={formAction} className="space-y-4">
+              <form onSubmit={handleAugmentSubmit} className="space-y-4">
                 <input type="hidden" name="monasteryName" value={monastery.name} />
                 <input type="hidden" name="existingInformation" value={`${monastery.description} ${monastery.history}`} />
                 <div>
                   <Label htmlFor="crowdSourcedInformation">Your Information</Label>
                   <Textarea id="crowdSourcedInformation" name="crowdSourcedInformation" placeholder="Add facts, stories, or corrections..." required />
                 </div>
-                <SubmitButton />
+                <Button type="submit" disabled={formPending}>
+                    {formPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Submit Information
+                </Button>
               </form>
             </CardContent>
           </Card>
