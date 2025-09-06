@@ -1,6 +1,5 @@
 'use client';
 
-import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { monasteries } from '@/lib/data';
@@ -13,9 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Camera, PlayCircle, Info, PauseCircle, Loader2, Compass } from 'lucide-react';
+import { Camera, Info, Compass } from 'lucide-react';
 
 export function generateStaticParams() {
   return monasteries.map((monastery) => ({
@@ -25,150 +22,13 @@ export function generateStaticParams() {
 
 export default function MonasteryPage({ params }: { params: { id: string } }) {
   const monastery = monasteries.find((m) => m.id === params.id);
-  const { toast } = useToast();
-  const audioRef = useRef<HTMLAudioElement>(null);
-  
-  const [localServices, setLocalServices] = useState({ loading: false, recommendations: '' });
-  const [audioState, setAudioState] = useState({
-    playing: false,
-    loadingTrack: null as string | null,
-    currentTrack: null as string | null,
-    audioSrc: '',
-  });
-
-  const [formPending, setFormPending] = useState(false);
 
   if (!monastery) {
     notFound();
   }
-  
-  const handleFetchLocalServices = async () => {
-    setLocalServices({ loading: true, recommendations: '' });
-    try {
-      const response = await fetch('/api/services/local', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ monasteryId: monastery.id, monasteryName: monastery.name })
-      });
-      const result = await response.json();
-      if (!response.ok) {
-        toast({ title: "Error", description: result.error || "Failed to fetch local services.", variant: 'destructive' });
-        setLocalServices({ loading: false, recommendations: '' });
-      } else {
-        setLocalServices({ loading: false, recommendations: result.recommendations });
-      }
-    } catch (error) {
-        console.error(error);
-        toast({ title: "Error", description: "Failed to connect to the server.", variant: 'destructive' });
-        setLocalServices({ loading: false, recommendations: '' });
-    }
-  };
-
-  const handleAugmentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setFormPending(true);
-    const formData = new FormData(event.currentTarget);
-    
-    const data = {
-        monasteryName: formData.get('monasteryName'),
-        existingInformation: formData.get('existingInformation'),
-        crowdSourcedInformation: formData.get('crowdSourcedInformation'),
-    };
-
-    try {
-        const response = await fetch('/api/monasteries/augment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-        const result = await response.json();
-        
-        if (!response.ok) {
-            toast({
-                title: 'Submission Failed',
-                description: result.message,
-                variant: 'destructive',
-            });
-        } else {
-            toast({
-                title: 'Information Processed',
-                description: result.message,
-            });
-            (event.target as HTMLFormElement).reset();
-        }
-    } catch (error) {
-        console.error(error);
-        toast({
-            title: 'Error',
-            description: 'Failed to submit information.',
-            variant: 'destructive',
-        });
-    } finally {
-        setFormPending(false);
-    }
-  };
-
-
-  const audioTracks = [
-    '1. Introduction to the Monastery',
-    '2. The Main Prayer Hall',
-    '3. Significance of the Murals',
-    '4. The Story of the Founder',
-  ];
-
-  const handlePlayPause = async (track: string) => {
-    const isPlaying = audioState.playing;
-    const currentTrack = audioState.currentTrack;
-
-    if (currentTrack === track && isPlaying) {
-      audioRef.current?.pause();
-      setAudioState(prev => ({ ...prev, playing: false }));
-    } else if (currentTrack === track && !isPlaying) {
-      audioRef.current?.play();
-      setAudioState(prev => ({ ...prev, playing: true }));
-    } else {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      setAudioState(prev => ({...prev, loadingTrack: track, playing: false, audioSrc: ''}));
-      try {
-        const response = await fetch('/api/audio/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: track, monasteryName: monastery.name })
-        });
-        const result = await response.json();
-        if (!response.ok) {
-            toast({ title: "Error", description: result.error || "Failed to generate audio.", variant: 'destructive' });
-            setAudioState(prev => ({ ...prev, loadingTrack: null, playing: false }));
-        } else {
-            setAudioState({ loadingTrack: null, currentTrack: track, audioSrc: result.audio, playing: true });
-        }
-      } catch (error) {
-          console.error(error);
-          toast({ title: "Error", description: "Failed to connect to the server.", variant: 'destructive' });
-          setAudioState(prev => ({ ...prev, loadingTrack: null, playing: false }));
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (audioState.audioSrc && audioRef.current) {
-      audioRef.current.src = audioState.audioSrc;
-      audioRef.current.play().catch(e => console.error("Audio play failed:", e));
-    }
-  }, [audioState.audioSrc]);
-  
-  useEffect(() => {
-    const audioElement = audioRef.current;
-    const handleEnded = () => setAudioState(prev => ({...prev, playing: false, currentTrack: null}));
-    audioElement?.addEventListener('ended', handleEnded);
-    return () => audioElement?.removeEventListener('ended', handleEnded);
-  }, []);
 
   return (
     <div className="space-y-8">
-      <audio ref={audioRef} />
       <div>
         <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight">{monastery.name}</h1>
         <p className="text-muted-foreground mt-2 text-lg">Established: {monastery.established} | {monastery.district}</p>
@@ -214,14 +74,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                     <CardDescription>Find local transportation and guides.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {localServices.recommendations ? (
-                        <p className="text-sm text-muted-foreground">{localServices.recommendations}</p>
-                    ) : (
-                        <Button className="w-full" onClick={handleFetchLocalServices} disabled={localServices.loading}>
-                            {localServices.loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Find Local Services
-                        </Button>
-                    )}
+                    <p className="text-sm text-muted-foreground">Local services information is not available in the static version of this app.</p>
                 </CardContent>
             </Card>
 
@@ -231,16 +84,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                 <CardDescription>Listen to narrated walkthroughs.</CardDescription>
             </Header>
             <CardContent>
-                <ul className="space-y-3">
-                    {audioTracks.map((track, index) => (
-                        <li key={index} className="flex items-center gap-3">
-                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handlePlayPause(track)} disabled={audioState.loadingTrack !== null && audioState.loadingTrack !== track}>
-                                {audioState.loadingTrack === track ? <Loader2 className="h-5 w-5 animate-spin"/> : (audioState.playing && audioState.currentTrack === track) ? <PauseCircle className="h-5 w-5" /> : <PlayCircle className="h-5 w-5" />}
-                            </Button>
-                            <span className="text-sm flex-1">{track}</span>
-                        </li>
-                    ))}
-                </ul>
+                <p className="text-sm text-muted-foreground">The audio guide is not available in the static version of this app.</p>
                  <Button className="w-full mt-4" disabled>Download for Offline Use</Button>
             </CardContent>
           </Card>
@@ -251,18 +95,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                 <CardDescription>Share your knowledge to enrich our records.</CardDescription>
             </Header>
             <CardContent>
-              <form onSubmit={handleAugmentSubmit} className="space-y-4">
-                <input type="hidden" name="monasteryName" value={monastery.name} />
-                <input type="hidden" name="existingInformation" value={`${monastery.description} ${monastery.history}`} />
-                <div>
-                  <Label htmlFor="crowdSourcedInformation">Your Information</Label>
-                  <Textarea id="crowdSourcedInformation" name="crowdSourcedInformation" placeholder="Add facts, stories, or corrections..." required />
-                </div>
-                <Button type="submit" disabled={formPending}>
-                    {formPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Submit Information
-                </Button>
-              </form>
+              <p className="text-sm text-muted-foreground">Contributions are not available in the static version of this app.</p>
             </CardContent>
           </Card>
         </div>
@@ -270,5 +103,3 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
     </div>
   );
 }
-
-    
