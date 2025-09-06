@@ -17,6 +17,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Camera, PlayCircle, Info, PauseCircle, Loader2, Compass } from 'lucide-react';
 
+export function generateStaticParams() {
+  return monasteries.map((monastery) => ({
+    id: monastery.id,
+  }));
+}
+
 export default function MonasteryPage({ params }: { params: { id: string } }) {
   const monastery = monasteries.find((m) => m.id === params.id);
   const { toast } = useToast();
@@ -46,14 +52,14 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
       });
       const result = await response.json();
       if (!response.ok) {
-        toast({ title: "Error", description: result.error || "Failed to fetch local services." });
+        toast({ title: "Error", description: result.error || "Failed to fetch local services.", variant: 'destructive' });
         setLocalServices({ loading: false, recommendations: '' });
       } else {
         setLocalServices({ loading: false, recommendations: result.recommendations });
       }
     } catch (error) {
         console.error(error);
-        toast({ title: "Error", description: "Failed to connect to the server." });
+        toast({ title: "Error", description: "Failed to connect to the server.", variant: 'destructive' });
         setLocalServices({ loading: false, recommendations: '' });
     }
   };
@@ -76,11 +82,18 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
             body: JSON.stringify(data),
         });
         const result = await response.json();
-        toast({
-            title: 'Information Processed',
-            description: result.message,
-        });
-        if(response.ok) {
+        
+        if (!response.ok) {
+            toast({
+                title: 'Submission Failed',
+                description: result.message,
+                variant: 'destructive',
+            });
+        } else {
+            toast({
+                title: 'Information Processed',
+                description: result.message,
+            });
             (event.target as HTMLFormElement).reset();
         }
     } catch (error) {
@@ -88,6 +101,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         toast({
             title: 'Error',
             description: 'Failed to submit information.',
+            variant: 'destructive',
         });
     } finally {
         setFormPending(false);
@@ -125,14 +139,14 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         });
         const result = await response.json();
         if (!response.ok) {
-            toast({ title: "Error", description: result.error || "Failed to generate audio." });
+            toast({ title: "Error", description: result.error || "Failed to generate audio.", variant: 'destructive' });
             setAudioState(prev => ({ ...prev, loadingTrack: null, playing: false }));
         } else {
             setAudioState({ loadingTrack: null, currentTrack: track, audioSrc: result.audio, playing: true });
         }
       } catch (error) {
           console.error(error);
-          toast({ title: "Error", description: "Failed to connect to the server." });
+          toast({ title: "Error", description: "Failed to connect to the server.", variant: 'destructive' });
           setAudioState(prev => ({ ...prev, loadingTrack: null, playing: false }));
       }
     }
@@ -215,7 +229,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
             <CardHeader>
                 <CardTitle>Smart Audio Guide</CardTitle>
                 <CardDescription>Listen to narrated walkthroughs.</CardDescription>
-            </CardHeader>
+            </Header>
             <CardContent>
                 <ul className="space-y-3">
                     {audioTracks.map((track, index) => (
@@ -235,7 +249,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
             <CardHeader>
                 <CardTitle>Contribute Information</CardTitle>
                 <CardDescription>Share your knowledge to enrich our records.</CardDescription>
-            </CardHeader>
+            </Header>
             <CardContent>
               <form onSubmit={handleAugmentSubmit} className="space-y-4">
                 <input type="hidden" name="monasteryName" value={monastery.name} />
@@ -256,3 +270,5 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
     </div>
   );
 }
+
+    

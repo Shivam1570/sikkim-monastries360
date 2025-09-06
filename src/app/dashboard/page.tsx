@@ -34,7 +34,6 @@ export default function DashboardPage() {
                   data-ai-hint="monastery building"
                   fill
                   className="object-cover rounded-t-lg"
-                  unoptimized
                 />
               </div>
               <div className="p-6 pb-0">
@@ -58,3 +57,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
