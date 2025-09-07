@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, Play, Pause, Download, AlertCircle } from 'lucide-react';
+import { Loader2, Play, Pause, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface SmartAudioGuideProps {
@@ -21,6 +21,9 @@ export default function SmartAudioGuide({ monasteryName, guideText }: SmartAudio
     setLoading(true);
     setAudioUrl(null);
     setIsPlaying(false);
+    if (audioRef.current) {
+        audioRef.current.src = '';
+    }
     try {
       const response = await fetch('/api/audio/generate', {
         method: 'POST',
@@ -50,10 +53,9 @@ export default function SmartAudioGuide({ monasteryName, guideText }: SmartAudio
       } else {
         audioRef.current.play();
       }
-      setIsPlaying(!isPlaying);
     }
   };
-
+  
   return (
     <div className="space-y-4">
       {!audioUrl && (
@@ -68,19 +70,19 @@ export default function SmartAudioGuide({ monasteryName, guideText }: SmartAudio
           <audio
             ref={audioRef}
             src={audioUrl}
-            onEnded={() => setIsPlaying(false)}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
-            className="w-full"
+            onEnded={() => setIsPlaying(false)}
+            className="hidden"
           />
           <div className="flex gap-2">
             <Button onClick={togglePlayback} className="flex-1">
-              {isPlaying ? <Pause className="mr-2" /> : <Play className="mr-2" />}
+              {isPlaying ? <Pause className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />}
               {isPlaying ? 'Pause' : 'Play'}
             </Button>
             <Button variant="outline" size="icon" asChild>
                 <a href={audioUrl} download={`${monasteryName.replace(/\s+/g, '_')}_guide.wav`}>
-                    <Download />
+                    <Download className="h-4 w-4" />
                 </a>
             </Button>
           </div>
