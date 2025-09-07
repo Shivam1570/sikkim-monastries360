@@ -38,12 +38,15 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-2 space-y-8">
           <Card>
             <CardHeader>
-                <div className="flex items-center gap-2"><Camera/><CardTitle>Virtual Tour</CardTitle></div>
+                <div className="flex items-center gap-2">
+                    <Camera/>
+                    <CardTitle>Virtual Tour</CardTitle>
+                </div>
             </CardHeader>
             <CardContent>
                 <div className="relative aspect-video w-full">
                     <Image
-                        src={`https://picsum.photos/1200/800?image=${monasteryIndex + 10}`}
+                        src={`https://picsum.photos/1200/${800 + monasteryIndex}`}
                         alt={`360 view of ${monastery.name}`}
                         data-ai-hint="monastery interior"
                         fill
@@ -58,7 +61,10 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           
           <Card>
             <CardHeader>
-                <div className="flex items-center gap-2"><Info/><CardTitle>About the Monastery</CardTitle></div>
+                <div className="flex items-center gap-2">
+                    <Info/>
+                    <CardTitle>About the Monastery</CardTitle>
+                </div>
             </CardHeader>
             <CardContent className="space-y-4 text-base">
                 <p>{monastery.description}</p>
@@ -70,7 +76,10 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-1 space-y-8">
             <Card>
                 <CardHeader>
-                    <div className="flex items-center gap-2"><Compass/><CardTitle>Plan Your Visit</CardTitle></div>
+                    <div className="flex items-center gap-2">
+                        <Compass/>
+                        <CardTitle>Plan Your Visit</CardTitle>
+                    </div>
                     <CardDescription>Find local transportation and guides.</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -80,9 +89,12 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
 
           <Card>
             <CardHeader>
-                <div className='flex items-center gap-2'><Music /><CardTitle>Smart Audio Guide</CardTitle></div>
+                <div className="flex items-center gap-2">
+                    <Music />
+                    <CardTitle>Smart Audio Guide</CardTitle>
+                </div>
                 <CardDescription>Listen to narrated walkthroughs.</CardDescription>
-            </Header>
+            </CardHeader>
             <CardContent>
                 <p className="text-sm text-muted-foreground">The audio guide is not available in the static version of this app.</p>
                  <Button className="w-full mt-4" disabled>Download for Offline Use</Button>
@@ -91,9 +103,12 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           
           <Card>
             <CardHeader>
-                <div className='flex items-center gap-2'><PlusCircle /><CardTitle>Contribute Information</CardTitle></div>
+                <div className="flex items-center gap-2">
+                    <PlusCircle />
+                    <CardTitle>Contribute Information</CardTitle>
+                </div>
                 <CardDescription>Share your knowledge to enrich our records.</CardDescription>
-            </Header>
+            </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">Contributions are not available in the static version of this app.</p>
             </CardContent>
