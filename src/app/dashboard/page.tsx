@@ -29,7 +29,7 @@ export default function DashboardPage() {
             <CardHeader className="p-0">
               <div className="relative aspect-video w-full">
                 <Image
-                  src={`https://picsum.photos/800/600?image=${index}`}
+                  src={monastery.image}
                   alt={`Image of ${monastery.name}`}
                   data-ai-hint="monastery building"
                   fill
