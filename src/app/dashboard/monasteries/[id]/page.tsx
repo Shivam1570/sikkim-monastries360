@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import { monasteries } from '@/lib/data';
 import { notFound } from 'next/navigation';
