@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { monasteries } from '@/lib/data';
 import { notFound } from 'next/navigation';
@@ -12,7 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Camera, Info, Compass } from 'lucide-react';
+import { Camera, Info, Compass, Music, PlusCircle } from 'lucide-react';
 
 export function generateStaticParams() {
   return monasteries.map((monastery) => ({
@@ -22,6 +21,7 @@ export function generateStaticParams() {
 
 export default function MonasteryPage({ params }: { params: { id: string } }) {
   const monastery = monasteries.find((m) => m.id === params.id);
+  const monasteryIndex = monasteries.findIndex((m) => m.id === params.id);
 
   if (!monastery) {
     notFound();
@@ -43,14 +43,14 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
             <CardContent>
                 <div className="relative aspect-video w-full">
                     <Image
-                        src={`${monastery.virtualTourImage}?${monastery.id}`}
+                        src={`https://picsum.photos/1200/800?image=${monasteryIndex + 10}`}
                         alt={`360 view of ${monastery.name}`}
                         data-ai-hint="monastery interior"
                         fill
                         className="object-cover rounded-lg"
                     />
                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded-lg">
-                        <Button size="lg" variant="secondary">View 360° Tour</Button>
+                        <Button size="lg" variant="secondary" disabled>View 360° Tour</Button>
                     </div>
                 </div>
             </CardContent>
@@ -80,7 +80,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
 
           <Card>
             <CardHeader>
-                <CardTitle>Smart Audio Guide</CardTitle>
+                <div className='flex items-center gap-2'><Music /><CardTitle>Smart Audio Guide</CardTitle></div>
                 <CardDescription>Listen to narrated walkthroughs.</CardDescription>
             </Header>
             <CardContent>
@@ -91,7 +91,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           
           <Card>
             <CardHeader>
-                <CardTitle>Contribute Information</CardTitle>
+                <div className='flex items-center gap-2'><PlusCircle /><CardTitle>Contribute Information</CardTitle></div>
                 <CardDescription>Share your knowledge to enrich our records.</CardDescription>
             </Header>
             <CardContent>

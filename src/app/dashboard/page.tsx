@@ -24,12 +24,12 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {monasteries.map((monastery) => (
+        {monasteries.map((monastery, index) => (
           <Card key={monastery.id} className="flex flex-col">
             <CardHeader className="p-0">
               <div className="relative aspect-video w-full">
                 <Image
-                  src={`${monastery.image}?${monastery.id}`}
+                  src={`https://picsum.photos/800/600?image=${index}`}
                   alt={`Image of ${monastery.name}`}
                   data-ai-hint="monastery building"
                   fill
