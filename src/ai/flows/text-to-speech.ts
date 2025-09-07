@@ -11,6 +11,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import wav from 'wav';
+import {googleAI} from '@genkit-ai/googleai';
 
 const TextToSpeechInputSchema = z.object({
   text: z.string().describe('The text to convert to speech.'),
@@ -52,7 +53,7 @@ const textToSpeechFlow = ai.defineFlow(
     const speechPrompt = `You are a serene and knowledgeable tour guide for the ${input.monasteryName}. Narrate the following text in a calm and respectful voice: "${input.text}"`;
     
     const { media } = await ai.generate({
-        model: 'gemini-2.5-flash-preview-tts',
+        model: googleAI('text-to-speech-2-flash'),
         config: {
           responseModalities: ['AUDIO'],
           speechConfig: {
