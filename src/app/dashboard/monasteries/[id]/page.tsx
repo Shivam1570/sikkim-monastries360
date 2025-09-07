@@ -38,7 +38,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-2 space-y-8">
           <Card>
             <CardHeader>
-                <CardTitle><div className="flex items-center gap-2"><Camera/> Virtual Tour</div></CardTitle>
+                <div className="flex items-center gap-2"><Camera/><CardTitle>Virtual Tour</CardTitle></div>
             </CardHeader>
             <CardContent>
                 <div className="relative aspect-video w-full">
@@ -58,7 +58,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           
           <Card>
             <CardHeader>
-                <CardTitle><div className="flex items-center gap-2"><Info/> About the Monastery</div></CardTitle>
+                <div className="flex items-center gap-2"><Info/><CardTitle>About the Monastery</CardTitle></div>
             </CardHeader>
             <CardContent className="space-y-4 text-base">
                 <p>{monastery.description}</p>
@@ -70,7 +70,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-1 space-y-8">
             <Card>
                 <CardHeader>
-                    <CardTitle><div className="flex items-center gap-2"><Compass/> Plan Your Visit</div></CardTitle>
+                    <div className="flex items-center gap-2"><Compass/><CardTitle>Plan Your Visit</CardTitle></div>
                     <CardDescription>Find local transportation and guides.</CardDescription>
                 </CardHeader>
                 <CardContent>
