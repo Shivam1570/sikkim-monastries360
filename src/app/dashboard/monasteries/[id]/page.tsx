@@ -10,6 +10,9 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Camera, Info, Compass, Music, PlusCircle } from 'lucide-react';
+import LocalServices from './_components/local-services';
+import SmartAudioGuide from './_components/smart-audio-guide';
+import ContributeInfo from './_components/contribute-info';
 
 export function generateStaticParams() {
   return monasteries.map((monastery) => ({
@@ -81,7 +84,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                     <CardDescription>Find local transportation and guides.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-sm text-muted-foreground">Local services information is not available in the static version of this app.</p>
+                    <LocalServices monasteryId={monastery.id} monasteryName={monastery.name} />
                 </CardContent>
             </Card>
 
@@ -92,10 +95,9 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                     <CardTitle>Smart Audio Guide</CardTitle>
                 </div>
                 <CardDescription>Listen to narrated walkthroughs.</CardDescription>
-            </CardHeader>
+            </Header>
             <CardContent>
-                <p className="text-sm text-muted-foreground">The audio guide is not available in the static version of this app.</p>
-                 <Button className="w-full mt-4" disabled>Download for Offline Use</Button>
+                <SmartAudioGuide monasteryName={monastery.name} guideText={`${monastery.description} ${monastery.history}`} />
             </CardContent>
           </Card>
           
@@ -108,7 +110,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                 <CardDescription>Share your knowledge to enrich our records.</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Contributions are not available in the static version of this app.</p>
+                <ContributeInfo monasteryName={monastery.name} existingInformation={`${monastery.description} ${monastery.history}`} />
             </CardContent>
           </Card>
         </div>
