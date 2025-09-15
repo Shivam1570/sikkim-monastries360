@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { monasteries } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import {
@@ -9,8 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Camera, Info, Compass, Music, PlusCircle } from 'lucide-react';
-import LocalServices from './_components/local-services';
+import { Camera, Info, Compass, Music, PlusCircle, ArrowRight } from 'lucide-react';
 import SmartAudioGuide from './_components/smart-audio-guide';
 import ContributeInfo from './_components/contribute-info';
 
@@ -39,15 +39,15 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-2 space-y-8">
           <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                     <Camera/>
-                    Virtual Tour
-                </CardTitle>
+                    <CardTitle>Virtual Tour</CardTitle>
+                </div>
             </CardHeader>
             <CardContent>
                 <div className="relative aspect-video w-full">
                     <Image
-                        src={`https://picsum.photos/1200/${800 + monasteryIndex}`}
+                        src={`https://picsum.photos/seed/${monastery.id}/1200/800`}
                         alt={`360 view of ${monastery.name}`}
                         data-ai-hint="monastery interior"
                         fill
@@ -62,10 +62,10 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           
           <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                     <Info/>
-                    About the Monastery
-                </CardTitle>
+                    <CardTitle>About the Monastery</CardTitle>
+                </div>
             </CardHeader>
             <CardContent className="space-y-4 text-base">
                 <p>{monastery.description}</p>
@@ -77,23 +77,27 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-1 space-y-8">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
                         <Compass/>
-                        Plan Your Visit
-                    </CardTitle>
+                        <CardTitle>Plan Your Visit</CardTitle>
+                    </div>
                     <CardDescription>Find local transportation and guides.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <LocalServices monasteryId={monastery.id} monasteryName={monastery.name} />
+                    <Button asChild className="w-full">
+                        <Link href={`/dashboard/monasteries/${monastery.id}/services`}>
+                            Find Local Services <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                    </Button>
                 </CardContent>
             </Card>
 
           <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                     <Music />
-                    Smart Audio Guide
-                </CardTitle>
+                    <CardTitle>Smart Audio Guide</CardTitle>
+                </div>
                 <CardDescription>Listen to narrated walkthroughs.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -103,10 +107,10 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           
           <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                     <PlusCircle />
-                    Contribute Information
-                </CardTitle>
+                    <CardTitle>Contribute Information</CardTitle>
+                </div>
                 <CardDescription>Share your knowledge to enrich our records.</CardDescription>
             </CardHeader>
             <CardContent>

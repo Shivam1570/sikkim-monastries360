@@ -12,11 +12,14 @@ import {
   SidebarFooter,
   SidebarTrigger,
   SidebarInset,
+  SidebarGroup,
+  SidebarGroupLabel,
 } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 import { DharmaWheel } from '@/components/icons'
-import { Home, Map, Calendar, ArrowLeft, UserCircle } from 'lucide-react'
+import { Home, Map, Calendar, ArrowLeft, UserCircle, Building } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { monasteries } from '@/lib/data';
 
 function Header({ className, ...props }: React.ComponentProps<'header'>) {
   return (
@@ -85,6 +88,21 @@ export default function DashboardLayout({
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
+          <SidebarGroup>
+            <SidebarGroupLabel>Monasteries</SidebarGroupLabel>
+            <SidebarMenu>
+              {monasteries.slice(0, 3).map((monastery) => (
+                <SidebarMenuItem key={monastery.id}>
+                  <SidebarMenuButton asChild isActive={isActive(`/dashboard/monasteries/${monastery.id}`)}>
+                    <Link href={`/dashboard/monasteries/${monastery.id}`}>
+                      <Building />
+                      {monastery.name}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
             <SidebarMenu>
