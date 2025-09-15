@@ -50,6 +50,34 @@ const GetLocalServicesOutputSchema = z.object({
 });
 export type GetLocalServicesOutput = z.infer<typeof GetLocalServicesOutputSchema>;
 
+const findTransportTool = ai.defineTool(
+    {
+      name: 'findTransport',
+      description: 'Finds local transport options like taxis near a specific monastery.',
+      inputSchema: z.object({
+        monasteryId: z.string().describe('The ID of the monastery.'),
+      }),
+      outputSchema: z.array(z.object({ name: z.string(), phone: z.string() })),
+    },
+    async ({ monasteryId }) => {
+      return (localServicesDB[monasteryId as keyof typeof localServicesDB] || localServicesDB.default).taxis;
+    }
+  );
+  
+const findTourGuidesTool = ai.defineTool(
+    {
+        name: 'findTourGuides',
+        description: 'Finds local tour guides and tourism services for a given monastery.',
+        inputSchema: z.object({
+            monasteryId: z.string().describe('The ID of the monastery.'),
+        }),
+        outputSchema: z.array(z.object({ name: z.string(), rating: z.number() })),
+    },
+    async ({ monasteryId }) => {
+        return (localServicesDB[monasteryId as keyof typeof localServicesDB] || localServicesDB.default).guides;
+    }
+);
+
 const getLocalServicesFlow = ai.defineFlow(
     {
       name: 'getLocalServicesFlow',
@@ -57,34 +85,6 @@ const getLocalServicesFlow = ai.defineFlow(
       outputSchema: GetLocalServicesOutputSchema,
     },
     async (input) => {
-        const findTransportTool = ai.defineTool(
-            {
-              name: 'findTransport',
-              description: 'Finds local transport options like taxis near a specific monastery.',
-              inputSchema: z.object({
-                monasteryId: z.string().describe('The ID of the monastery.'),
-              }),
-              outputSchema: z.array(z.object({ name: z.string(), phone: z.string() })),
-            },
-            async ({ monasteryId }) => {
-              return (localServicesDB[monasteryId as keyof typeof localServicesDB] || localServicesDB.default).taxis;
-            }
-          );
-          
-          const findTourGuidesTool = ai.defineTool(
-            {
-              name: 'findTourGuides',
-              description: 'Finds local tour guides and tourism services for a given monastery.',
-              inputSchema: z.object({
-                  monasteryId: z.string().describe('The ID of the monastery.'),
-              }),
-              outputSchema: z.array(z.object({ name: z.string(), rating: z.number() })),
-            },
-            async ({ monasteryId }) => {
-              return (localServicesDB[monasteryId as keyof typeof localServicesDB] || localServicesDB.default).guides;
-            }
-          );
-
         const getLocalServicesPrompt = ai.definePrompt({
             name: 'getLocalServicesPrompt',
             input: { schema: GetLocalServicesInputSchema },
