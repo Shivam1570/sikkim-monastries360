@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { monasteries } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import {
@@ -9,10 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Camera, Info, Compass, Music, PlusCircle, ArrowRight } from 'lucide-react';
+import { Camera, Info, Compass, Music, PlusCircle } from 'lucide-react';
 import SmartAudioGuide from './_components/smart-audio-guide';
 import ContributeInfo from './_components/contribute-info';
+import LocalServices from './_components/local-services';
+import { Button } from '@/components/ui/button';
 
 export function generateStaticParams() {
   return monasteries.map((monastery) => ({
@@ -47,7 +47,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
             <CardContent>
                 <div className="relative aspect-video w-full">
                     <Image
-                        src={`https://picsum.photos/seed/${monastery.id}/1200/800`}
+                        src={`https://picsum.photos/seed/${monasteryIndex}/1200/800`}
                         alt={`360 view of ${monastery.name}`}
                         data-ai-hint="monastery interior"
                         fill
@@ -84,11 +84,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                     <CardDescription>Find local transportation and guides.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Button asChild className="w-full">
-                        <Link href={`/dashboard/monasteries/${monastery.id}/services`}>
-                            Find Local Services <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
-                    </Button>
+                    <LocalServices monasteryId={monastery.id} monasteryName={monastery.name} />
                 </CardContent>
             </Card>
 
