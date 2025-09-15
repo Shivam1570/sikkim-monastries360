@@ -8,8 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Camera, Info, Compass, Music, PlusCircle } from 'lucide-react';
+import SmartAudioGuide from './_components/smart-audio-guide';
+import ContributeInfo from './_components/contribute-info';
+import LocalServices from './_components/local-services';
+import { Button } from '@/components/ui/button';
 
 export function generateStaticParams() {
   return monasteries.map((monastery) => ({
@@ -36,15 +39,15 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-2 space-y-8">
           <Card>
             <CardHeader>
-                <div className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2">
                     <Camera/>
-                    <CardTitle>Virtual Tour</CardTitle>
-                </div>
+                    Virtual Tour
+                </CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="relative aspect-video w-full">
                     <Image
-                        src={`https://picsum.photos/1200/${800 + monasteryIndex}`}
+                        src={`https://picsum.photos/seed/${monasteryIndex}/1200/800`}
                         alt={`360 view of ${monastery.name}`}
                         data-ai-hint="monastery interior"
                         fill
@@ -59,10 +62,10 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           
           <Card>
             <CardHeader>
-                <div className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2">
                     <Info/>
-                    <CardTitle>About the Monastery</CardTitle>
-                </div>
+                    About the Monastery
+                </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-base">
                 <p>{monastery.description}</p>
@@ -74,41 +77,40 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         <div className="lg:col-span-1 space-y-8">
             <Card>
                 <CardHeader>
-                    <div className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2">
                         <Compass/>
-                        <CardTitle>Plan Your Visit</CardTitle>
-                    </div>
+                        Plan Your Visit
+                    </CardTitle>
                     <CardDescription>Find local transportation and guides.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-sm text-muted-foreground">Local services information is not available in the static version of this app.</p>
+                    <LocalServices monasteryId={monastery.id} monasteryName={monastery.name} />
                 </CardContent>
             </Card>
 
           <Card>
             <CardHeader>
-                <div className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2">
                     <Music />
-                    <CardTitle>Smart Audio Guide</CardTitle>
-                </div>
+                    Smart Audio Guide
+                </CardTitle>
                 <CardDescription>Listen to narrated walkthroughs.</CardDescription>
             </CardHeader>
             <CardContent>
-                <p className="text-sm text-muted-foreground">The audio guide is not available in the static version of this app.</p>
-                 <Button className="w-full mt-4" disabled>Download for Offline Use</Button>
+                <SmartAudioGuide monasteryName={monastery.name} guideText={`${monastery.description} ${monastery.history}`} />
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader>
-                <div className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2">
                     <PlusCircle />
-                    <CardTitle>Contribute Information</CardTitle>
-                </div>
+                    Contribute Information
+                </CardTitle>
                 <CardDescription>Share your knowledge to enrich our records.</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Contributions are not available in the static version of this app.</p>
+                <ContributeInfo monasteryName={monastery.name} existingInformation={`${monastery.description} ${monastery.history}`} />
             </CardContent>
           </Card>
         </div>
