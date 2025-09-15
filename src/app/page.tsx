@@ -29,7 +29,7 @@ export default function Home() {
       <main className="flex-1">
         <section className="relative h-[60vh] min-h-[500px] w-full">
           <Image
-            src="https://picsum.photos/1920/1080"
+            src="https://picsum.photos/seed/hero/1920/1080"
             alt="A serene monastery nestled in the mountains"
             data-ai-hint="monastery mountains"
             fill
