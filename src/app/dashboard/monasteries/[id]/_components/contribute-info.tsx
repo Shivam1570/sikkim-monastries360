@@ -69,7 +69,7 @@ export default function ContributeInfo({ monasteryName, existingInformation }: C
         />
         <Button type="submit" className="w-full" disabled={loading}>
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Contribute Information
+          Submit
         </Button>
       </form>
       {result && (
