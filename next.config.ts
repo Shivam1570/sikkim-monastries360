@@ -1,7 +1,6 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -21,7 +20,13 @@ const nextConfig: NextConfig = {
         hostname: 'upload.wikimedia.org',
         port: '',
         pathname: '/**',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com', // ✅ Firebase images
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

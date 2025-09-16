@@ -1,3 +1,4 @@
+
 export type Monastery = {
     id: string;
     name: string;
@@ -91,7 +92,7 @@ export const monasteries: Monastery[] = [
         established: '18th century',
         description: 'Phodong Monastery is one of the six most important monasteries in Sikkim, belonging to the Kagyupa sect. It has a beautiful collection of ancient murals and is known for its annual festival featuring religious dances.',
         history: 'The monastery was founded in the early 18th century by the Chogyal Gyurmed Namgyal. However, the current structure was rebuilt in the early 20th century as the original had been destroyed by an earthquake. It remains an important religious institution.',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Phodong_Monastery_Sikkim_India_-_2.jpg/1280px-Phodong_Monastery_Sikkim_India_-_2.jpg',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Phodong_Monastery_Sikkim_India_-_2.jpg/1280px-Phodong_Monastery_Sikkim_India_-_2.jpg'
     }
 ];
 
