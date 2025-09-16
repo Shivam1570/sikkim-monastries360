@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Camera, Info, Compass, Music, MessageSquare } from 'lucide-react';
+import { Camera, Info, Compass, Music, PlusCircle } from 'lucide-react';
 import SmartAudioGuide from './_components/smart-audio-guide';
 import ContributeInfo from './_components/contribute-info';
 import LocalServices from './_components/local-services';
@@ -74,18 +74,18 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         </div>
 
         <div className="lg:col-span-1 space-y-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Compass/>
-                        Plan Your Visit
-                    </CardTitle>
-                    <CardDescription>Book a ride with a local service.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <LocalServices />
-                </CardContent>
-            </Card>
+          <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Compass/>
+                    AI Service Finder
+                </CardTitle>
+                <CardDescription>Find local guides and transportation.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <LocalServices monasteryId={monastery.id} monasteryName={monastery.name} />
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader>
@@ -103,10 +103,10 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    <MessageSquare />
-                    Share Your Experience
+                    <PlusCircle />
+                    Contribute Information
                 </CardTitle>
-                <CardDescription>Tell us about your visit or share a story.</CardDescription>
+                <CardDescription>Help us improve our information.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ContributeInfo monasteryName={monastery.name} existingInformation={`${monastery.description} ${monastery.history}`} />
