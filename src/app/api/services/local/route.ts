@@ -1,6 +1,6 @@
 'use server';
 
-import { getLocalServices } from '@/ai/flows/local-services';
+// import { getLocalServices } from '@/ai/flows/local-services';
 import { z } from 'zod';
 
 const localServicesSchema = z.object({
@@ -17,8 +17,10 @@ export async function POST(req: Request) {
             return new Response(JSON.stringify({ error: 'Invalid input.' }), { status: 400 });
         }
 
-        const result = await getLocalServices(validatedFields.data);
-        return new Response(JSON.stringify(result), { status: 200 });
+        // const result = await getLocalServices(validatedFields.data);
+        // return new Response(JSON.stringify(result), { status: 200 });
+        return new Response(JSON.stringify({}), { status: 200 });
+
 
     } catch (e) {
         console.error(e);
