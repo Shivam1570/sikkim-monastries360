@@ -22,7 +22,6 @@ export function generateStaticParams() {
 
 export default function MonasteryPage({ params }: { params: { id: string } }) {
   const monastery = monasteries.find((m) => m.id === params.id);
-  const monasteryIndex = monasteries.findIndex((m) => m.id === params.id);
 
   if (!monastery) {
     notFound();
@@ -47,7 +46,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
             <CardContent>
                 <div className="relative aspect-video w-full">
                     <Image
-                        src={`https://picsum.photos/seed/${monasteryIndex}/1200/800`}
+                        src={monastery.image}
                         alt={`360 view of ${monastery.name}`}
                         data-ai-hint="monastery interior"
                         fill
@@ -81,10 +80,10 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                         <Compass/>
                         Plan Your Visit
                     </CardTitle>
-                    <CardDescription>Find local transportation and guides.</CardDescription>
+                    <CardDescription>Book a ride with a local service.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <LocalServices monasteryId={monastery.id} monasteryName={monastery.name} />
+                    <LocalServices />
                 </CardContent>
             </Card>
 

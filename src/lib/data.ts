@@ -1,3 +1,4 @@
+
 export type Monastery = {
     id: string;
     name: string;
@@ -10,7 +11,6 @@ export type Monastery = {
     description: string;
     history: string;
     image: string;
-    virtualTourImage: string;
 };
 
 export const monasteries: Monastery[] = [
@@ -22,8 +22,7 @@ export const monasteries: Monastery[] = [
         established: '16th century',
         description: 'Rumtek Monastery, also called the Dharmachakra Centre, is a gompa located in the Indian state of Sikkim near the capital Gangtok. It is a focal point for the Karma Kagyu lineage of Tibetan Buddhism.',
         history: 'Originally built by the 9th Karmapa Wangchuk Dorje in the 16th century, Rumtek served as the main seat of the Karma Kagyu lineage in Sikkim for some time. But when the 16th Karmapa arrived in Sikkim in 1959, after fleeing Tibet, the monastery was in ruins. He decided to rebuild Rumtek. The new monastery was completed in four years.',
-        image: 'https://picsum.photos/800/600',
-        virtualTourImage: 'https://picsum.photos/1200/800'
+        image: 'https://picsum.photos/seed/rumtek/800/600',
     },
     {
         id: 'pemayangtse-monastery',
@@ -33,8 +32,7 @@ export const monasteries: Monastery[] = [
         established: '1705',
         description: 'Pemayangtse Monastery is a Buddhist monastery in Pemayangtse, near Pelling in the northeastern Indian state of Sikkim. Planned, designed and founded by Lama Lhatsun Chempo, it is one of the oldest and premier monasteries of Sikkim.',
         history: 'The monastery was built by Lama Lhatsun Chempo in 1705. The monastery is part of the Nyingma order and all other Nyingma monasteries in Sikkim are subordinate to it. The monks of this monastery are normally chosen from the Bhutias of Sikkim.',
-        image: 'https://picsum.photos/800/601',
-        virtualTourImage: 'https://picsum.photos/1200/801'
+        image: 'https://picsum.photos/seed/pemayangtse/800/600',
     },
     {
         id: 'tashiding-monastery',
@@ -44,8 +42,7 @@ export const monasteries: Monastery[] = [
         established: '1641',
         description: 'Tashiding Monastery is a Buddhist monastery of the Nyingma sect of Tibetan Buddhism in Western Sikkim, northeastern India. It is located on top of the hill rising between the Rathong chu and the Rangeet River.',
         history: 'Tashiding means "The Devoted Central Glory". The monastery was founded in 1641 by Ngadak Sempa Chempo Phunshok Rigzing who belonged to the Nyingma sect of Tibetan Buddhism. It is believed that a single glimpse of the monastery can cleanse one of all sins.',
-        image: 'https://picsum.photos/800/602',
-        virtualTourImage: 'https://picsum.photos/1200/802'
+        image: 'https://picsum.photos/seed/tashiding/800/600',
     },
     {
         id: 'enche-monastery',
@@ -55,8 +52,7 @@ export const monasteries: Monastery[] = [
         established: '1909',
         description: 'The Enchey Monastery ("Solitary Temple") is located 3 kilometres (1.9 mi) northeast of Gangtok, the capital of Sikkim. It belongs to the Nyingma order of Vajrayana Buddhism.',
         history: 'The monastery was built on the spot which was blessed by Lama Drupthob Karpo, a renowned exponent of tantric (Vajrayana) art in Buddhism with flying powers. The present monastery was built during the reign of Sikyong Tulku (1909–1910).',
-        image: 'https://picsum.photos/800/603',
-        virtualTourImage: 'https://picsum.photos/1200/803'
+        image: 'https://picsum.photos/seed/enchey/800/600',
     },
     {
         id: 'dubdi-monastery',
@@ -66,8 +62,7 @@ export const monasteries: Monastery[] = [
         established: '1701',
         description: 'Dubdi Monastery, also known as the "Hermit\'s Cell", is considered to be the oldest monastery in Sikkim. It is located on a hilltop near Yuksom, surrounded by pristine forests.',
         history: 'Founded in 1701 by Chogyar Namgyal, Dubdi is a pivotal site for the Nyingma sect. It was the first monastery established after the consecration of the first Chogyal of Sikkim and served as a hermitage for meditating lamas.',
-        image: 'https://picsum.photos/800/604',
-        virtualTourImage: 'https://picsum.photos/1200/804'
+        image: 'https://picsum.photos/seed/dubdi/800/600',
     },
     {
         id: 'ralang-monastery',
@@ -77,8 +72,7 @@ export const monasteries: Monastery[] = [
         established: '1768',
         description: 'Ralang Monastery is a significant Kagyu monastery known for its impressive collection of paintings and thangkas. It hosts the annual Pang Lhabsol festival with vibrant masked dances.',
         history: 'The monastery was built in 1768 after the 4th Gyaltsab Rinpoche returned from a pilgrimage. Legend says that upon his return, he threw grains of rice from his seat in Tsurphu, Tibet, and where they landed, the Ralang Monastery was built.',
-        image: 'https://picsum.photos/800/605',
-        virtualTourImage: 'https://picsum.photos/1200/805'
+        image: 'https://picsum.photos/seed/ralang/800/600',
     },
     {
         id: 'lachen-monastery',
@@ -88,8 +82,7 @@ export const monasteries: Monastery[] = [
         established: '1858',
         description: 'Perched on a hilltop overlooking the Lachen village, this Nyingma monastery offers breathtaking views of the surrounding mountains. It serves as the spiritual center for the local Lachenpa community.',
         history: 'Founded in 1858 by the Nyingma sect, Lachen Monastery has been a beacon of Buddhism in the remote northern regions of Sikkim. It houses a statue of Guru Padmasambhava and is an important pilgrimage site.',
-        image: 'https://picsum.photos/800/606',
-        virtualTourImage: 'https://picsum.photos/1200/806'
+        image: 'https://picsum.photos/seed/lachen/800/600',
     },
     {
         id: 'phodong-monastery',
@@ -99,9 +92,8 @@ export const monasteries: Monastery[] = [
         established: '18th century',
         description: 'Phodong Monastery is one of the six most important monasteries in Sikkim, belonging to the Kagyupa sect. It has a beautiful collection of ancient murals and is known for its annual festival featuring religious dances.',
         history: 'The monastery was founded in the early 18th century by the Chogyal Gyurmed Namgyal. However, the current structure was rebuilt in the early 20th century as the original had been destroyed by an earthquake. It remains an important religious institution.',
-        image: 'https://picsum.photos/800/607',
-        virtualTourImage: 'https://picsum.photos/1200/807'
-    }
+        image: 'https://picsum.photos/seed/phodong/800/600'
+    },
 ];
 
 export type CulturalEvent = {
