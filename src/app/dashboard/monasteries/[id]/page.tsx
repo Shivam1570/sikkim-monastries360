@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Camera, Info, Compass, Music, PlusCircle } from 'lucide-react';
+import { Camera, Info, Compass, Music, PlusCircle, MessageSquare } from 'lucide-react';
 import SmartAudioGuide from './_components/smart-audio-guide';
 import ContributeInfo from './_components/contribute-info';
 import LocalServices from './_components/local-services';
@@ -103,10 +103,10 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
           <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    <PlusCircle />
-                    Contribute Information
+                    <MessageSquare />
+                    Share Your Experience
                 </CardTitle>
-                <CardDescription>Share your knowledge to enrich our records.</CardDescription>
+                <CardDescription>Tell us about your visit or share a story.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ContributeInfo monasteryName={monastery.name} existingInformation={`${monastery.description} ${monastery.history}`} />
