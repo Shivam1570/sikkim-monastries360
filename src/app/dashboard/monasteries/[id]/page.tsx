@@ -80,10 +80,10 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                         <Compass/>
                         Plan Your Visit
                     </CardTitle>
-                    <CardDescription>Find local transportation and guides.</CardDescription>
+                    <CardDescription>Book a ride with a local service.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <LocalServices monasteryId={monastery.id} monasteryName={monastery.name} />
+                    <LocalServices />
                 </CardContent>
             </Card>
 
