@@ -10,12 +10,12 @@ const services = [
     },
     {
         name: 'Sikkim Tourism',
-        url: 'https://www.sikkimtourism.gov.in/Public/TravellerEssentials/Travel_Agents',
+        url: 'https://sikkimtourism.gov.in/Public/TravellerEssentials/Travel_Agents',
         type: 'Official Guide List'
     },
     {
         name: 'Wander Nagari',
-        url: 'https://wandernagari.com/sikkim-taxi-service/',
+        url: 'https://www.wandernagari.com/sikkim-taxi-service/',
         type: 'Taxi Service'
     }
 ];
