@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['picsum.photos', 'upload.wikimedia.org'],
+    domains: ['picsum.photos'],
   },
 };
 
