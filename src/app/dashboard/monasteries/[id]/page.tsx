@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Camera, Info, Compass, Music, PlusCircle, MessageSquare } from 'lucide-react';
+import { Camera, Info, Compass, Music, MessageSquare } from 'lucide-react';
 import SmartAudioGuide from './_components/smart-audio-guide';
 import ContributeInfo from './_components/contribute-info';
 import LocalServices from './_components/local-services';
