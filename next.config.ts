@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'firebasestorage.googleapis.com', // ✅ allow Firebase images
+        hostname: 'firebasestorage.googleapis.com',
         port: '',
         pathname: '/**',
       }
