@@ -60,7 +60,7 @@ export default function ContributeInfo({ monasteryName, existingInformation }: C
     <div className="space-y-4">
       <form onSubmit={handleSubmit} className="space-y-4">
         <Textarea
-          placeholder={`Tell us about your experience at ${monasteryName}...`}
+          placeholder={`Do you have more information about ${monasteryName}?`}
           value={contribution}
           onChange={(e) => setContribution(e.target.value)}
           className="min-h-[100px]"
@@ -69,7 +69,7 @@ export default function ContributeInfo({ monasteryName, existingInformation }: C
         />
         <Button type="submit" className="w-full" disabled={loading}>
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Share Experience
+          Submit
         </Button>
       </form>
       {result && (

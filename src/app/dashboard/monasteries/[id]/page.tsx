@@ -74,18 +74,18 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
         </div>
 
         <div className="lg:col-span-1 space-y-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Compass/>
-                        Plan Your Visit
-                    </CardTitle>
-                    <CardDescription>Book a ride with a local service.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <LocalServices />
-                </CardContent>
-            </Card>
+          <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Compass/>
+                    Plan Your Visit
+                </CardTitle>
+                <CardDescription>Book local taxis and find guides.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <LocalServices />
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader>
@@ -106,7 +106,7 @@ export default function MonasteryPage({ params }: { params: { id: string } }) {
                     <MessageSquare />
                     Share Your Experience
                 </CardTitle>
-                <CardDescription>Tell us about your visit or share a story.</CardDescription>
+                <CardDescription>Help us improve our information.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ContributeInfo monasteryName={monastery.name} existingInformation={`${monastery.description} ${monastery.history}`} />
