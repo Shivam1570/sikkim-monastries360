@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
-import { DharmaWheel } from "@/components/icons";
+import { ArrowRight, Mountain } from "lucide-react";
 
 export default function Home() {
   return (
@@ -11,8 +10,8 @@ export default function Home() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
           <Link href="/" className="flex items-center gap-2 font-bold">
-            <DharmaWheel className="h-6 w-6 text-primary" />
-            <span className="font-headline text-xl">Monastri 360</span>
+            <Mountain className="h-6 w-6 text-primary" />
+            <span className="font-headline text-xl">Sikkim monastery360</span>
           </Link>
           <nav className="ml-auto flex items-center gap-4">
             <Button asChild>
@@ -88,7 +87,7 @@ export default function Home() {
       </main>
       <footer className="border-t py-6">
         <div className="container text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Monastri 360. All Rights Reserved.
+          © {new Date().getFullYear()} Sikkim monastery360. All Rights Reserved.
         </div>
       </footer>
     </div>

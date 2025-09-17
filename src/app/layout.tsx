@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Monastri 360',
+  title: 'Sikkim monastery360',
   description: 'Explore sacred monasteries in 360° for Tourism and Cultural Preservation',
 };
 
