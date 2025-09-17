@@ -54,7 +54,7 @@ export default function DashboardLayout({
         <SidebarHeader>
           <Link href="/dashboard" className="flex items-center gap-2 font-bold">
             <Mountain className="h-6 w-6 text-primary" />
-            <span className="font-headline text-lg">Sikkim monastery360</span>
+            <span className="font-headline text-lg">Monastery360</span>
           </Link>
         </SidebarHeader>
         <SidebarContent>
