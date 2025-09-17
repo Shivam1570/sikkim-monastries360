@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Sikkim Sanctuaries',
-  description: 'Digitize and Showcase Monasteries of Sikkim for Tourism and Cultural Preservation',
+  title: 'Sikkim monastery360',
+  description: 'Explore sacred monasteries in 360° for Tourism and Cultural Preservation',
 };
 
 export default function RootLayout({

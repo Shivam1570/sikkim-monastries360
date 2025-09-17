@@ -10,12 +10,12 @@ const services = [
     },
     {
         name: 'Sikkim Tourism',
-        url: 'https://sikkimtourism.gov.in/Public/TravellerEssentials/Travel_Agents',
+        url: 'https://sikkimtourism.gov.in/public/index',
         type: 'Official Guide List'
     },
     {
-        name: 'Wander Nagari',
-        url: 'https://www.wandernagari.com/sikkim-taxi-service/',
+        name: 'Local Guide',
+        url: 'https://wanderon.in/blogs/monasteries-in-sikkim',
         type: 'Taxi Service'
     }
 ];

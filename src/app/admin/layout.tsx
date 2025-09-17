@@ -14,8 +14,7 @@ import {
   SidebarInset,
 } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
-import { DharmaWheel } from '@/components/icons'
-import { LayoutDashboard, FileText, CalendarPlus, ArrowLeft, Home } from 'lucide-react'
+import { LayoutDashboard, FileText, CalendarPlus, ArrowLeft, Home, Mountain } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
 function Header({ className, ...props }: React.ComponentProps<'header'>) {
@@ -54,7 +53,7 @@ export default function AdminLayout({
       <Sidebar>
         <SidebarHeader>
           <Link href="/admin" className="flex items-center gap-2 font-bold">
-            <DharmaWheel className="h-6 w-6 text-primary" />
+            <Mountain className="h-6 w-6 text-primary" />
             <span className="font-headline text-lg">Admin Panel</span>
           </Link>
         </SidebarHeader>

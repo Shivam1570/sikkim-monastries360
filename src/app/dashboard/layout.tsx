@@ -14,8 +14,7 @@ import {
   SidebarInset,
 } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
-import { DharmaWheel } from '@/components/icons'
-import { Home, Map, Calendar, ArrowLeft, UserCircle } from 'lucide-react'
+import { Home, Map, Calendar, ArrowLeft, UserCircle, Mountain } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
 function Header({ className, ...props }: React.ComponentProps<'header'>) {
@@ -54,8 +53,8 @@ export default function DashboardLayout({
       <Sidebar>
         <SidebarHeader>
           <Link href="/dashboard" className="flex items-center gap-2 font-bold">
-            <DharmaWheel className="h-6 w-6 text-primary" />
-            <span className="font-headline text-lg">Sikkim Sanctuaries</span>
+            <Mountain className="h-6 w-6 text-primary" />
+            <span className="font-headline text-lg">Sikkim monastery360</span>
           </Link>
         </SidebarHeader>
         <SidebarContent>
