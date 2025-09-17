@@ -11,7 +11,7 @@ export default function AdminDashboardPage() {
           Admin Dashboard
         </h1>
         <p className="text-muted-foreground mt-2">
-          Manage curated content for Sikkim Sanctuaries.
+          Manage curated content for Monastri 360.
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -55,7 +55,7 @@ export default function DashboardLayout({
         <SidebarHeader>
           <Link href="/dashboard" className="flex items-center gap-2 font-bold">
             <DharmaWheel className="h-6 w-6 text-primary" />
-            <span className="font-headline text-lg">Sikkim Sanctuaries</span>
+            <span className="font-headline text-lg">Monastri 360</span>
           </Link>
         </SidebarHeader>
         <SidebarContent>

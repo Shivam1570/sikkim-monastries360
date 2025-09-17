@@ -12,7 +12,7 @@ export default function Home() {
         <div className="container flex h-14 items-center">
           <Link href="/" className="flex items-center gap-2 font-bold">
             <DharmaWheel className="h-6 w-6 text-primary" />
-            <span className="font-headline text-xl">Sikkim Sanctuaries</span>
+            <span className="font-headline text-xl">Monastri 360</span>
           </Link>
           <nav className="ml-auto flex items-center gap-4">
             <Button asChild>
@@ -88,7 +88,7 @@ export default function Home() {
       </main>
       <footer className="border-t py-6">
         <div className="container text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Sikkim Sanctuaries. All Rights Reserved.
+          © {new Date().getFullYear()} Monastri 360. All Rights Reserved.
         </div>
       </footer>
     </div>
